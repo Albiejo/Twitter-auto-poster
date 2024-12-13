@@ -1,12 +1,31 @@
 requirements //
 
 
-we need a sign up and login system
+we need  login/logout system.
 
-we need to gain access to my twitter account . 
-
+we need to gain access to  twitter account. 
 
 we need a home page where we list the upcoming tweets and time remaining for it.
 
+profile 
+
+
+functionality for scheduling a tweet 
+image 
+tweet 
+time and date 
+
+
+
+
+ modules 
+
+ 1. design 
+
+ 2. Authentication.
+
+ 3. dashboard 
+
+ 4. hosting
 
 
