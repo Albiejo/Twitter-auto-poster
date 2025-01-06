@@ -7,6 +7,11 @@ we need to gain access to  twitter account.
 
 we need a home page where we list the upcoming tweets and time remaining for it.
 
+
+we need option to create simple tweet and schedule it . 
+
+
+
 profile 
 
 

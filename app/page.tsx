@@ -29,7 +29,7 @@ export default function Home() {
   return (
    <div className="mt-6">
     <h2 className="text-center m-10">Tweeter</h2>
-    <Page/>
+    {/* <Page/> */}
     <div className="flex flex-wrap">
    <RemainingTime scheduledTime={"2024-12-31 23:59:59"}/>
    <NextTweetCard tweet={"hello"} scheduledTime={"2024-12-31 23:59:59"}/>
