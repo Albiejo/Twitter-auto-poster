@@ -5,17 +5,17 @@ we need  login/logout system.
 
 we need to gain access to  twitter account. 
 
-we need a home page where we list the upcoming tweets and time remaining for it.
+we need to show the logged in  user profile 
 
+we need a home page where we list the upcoming tweets and time remaining for it.
 
 we need option to create simple tweet and schedule it . 
 
 
 
-profile 
 
 
-functionality for scheduling a tweet 
+-------- functionality for scheduling a tweet --------
 image 
 tweet 
 time and date 
@@ -23,7 +23,7 @@ time and date
 
 
 
- modules 
+ ---------- modules --------------- 
 
  1. design 
 

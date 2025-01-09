@@ -56,7 +56,10 @@ export default {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
-  		}
+  		},
+		  backgroundImage: {
+			'twitter-blue': 'linear-gradient(to right, #1DA1F2, #009FFD, #0066FF)',
+		  },
   	}
   },
   plugins: [require("tailwindcss-animate")],
