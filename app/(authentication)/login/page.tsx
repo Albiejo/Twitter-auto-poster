@@ -1,78 +1,111 @@
-'use client';
+"use client";
 
-
-
-import React , {useState} from 'react'
-import Link from 'next/link';
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { SocialIcon } from 'react-social-icons'
-
-
+import React, { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { SocialIcon } from "react-social-icons";
+import { Separator } from "@/components/ui/separator";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const [email , setEmail] = useState("")
-    const [password  , setPassword] = useState("")
-
-
-
-    const handleSubmit=()=>{
-        console.log(email , password)
-    }
-
+  const handleSubmit = () => {
+    console.log(email, password);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <div className="flex justify-center mb-2">
-           <SocialIcon url="https://twitter.com" style={{height:40 , width:40}} />
+    <div className="flex min-h-screen">
+      {/* Left side - Blue background with logo */}
+      <div className="hidden md:flex md:w-1/2 bg-[#1DA1F2] items-center justify-center">
+        <div className="p-8 text-center">
+          <div className=" rounded-full p-8 inline-block shadow-lg">
+            {/* <SocialIcon className="h-32 w-32 text-[#1DA1F2]" /> */}
+            <SocialIcon
+              url="https://twitter.com"
+              style={{ height: 60, width: 60 }}
+            />
           </div>
-          <CardTitle className="text-2xl font-bold text-center  mb-2 ">Sign in to your twitter account</CardTitle>
-          <CardDescription className="text-center">
-            Enter your twitter username / email
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Username / Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="m@example.com" 
+        </div>
+      </div>
+
+      {/* Right side - Login form */}
+     
+      <div className="flex-1 flex flex-col items-center justify-center p-8">
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center">
+              Sign in using X
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Twitter X Logo */}
+            <div className="flex justify-center">
+              <SocialIcon
+                url="https://twitter.com"
+                style={{ height: 60, width: 60 }}
+              />
+            </div>
+
+            {/* Divider */}
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase"></div>
+            </div>
+
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <Input
+                type="text"
+                placeholder="Phone, email, or username"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required 
+                className="w-full border-[#1DA1F2] focus:ring-[#1DA1F2]"
+                required
               />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
+
+              <Input
                 type="password"
+                placeholder="enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required 
+                className="w-full border-[#1DA1F2] focus:ring-[#1DA1F2]"
+                required
               />
-            </div>
-            <Button type="submit" className="w-full">Sign In</Button>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-gray-600">
-            Don't have an account?{' '}
-            <Link href="/signup" className="font-medium text-blue-600 hover:underline">
-              Sign up
-            </Link>
-          </p>
-        </CardFooter>
-      </Card>
-    </div>
-  )
-}
 
-export default LoginPage
+              <Button
+                type="submit"
+                className="w-full bg-black hover:bg-gray-900 text-white"
+              >
+                Submit
+              </Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <p className="text-center text-sm text-gray-600">
+              Don't have an account?{" "}
+              <Link href="https://x.com/" className="text-[#1DA1F2] hover:underline">
+                Sign up
+              </Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
+
+    </div>
+  );
+};
+
+export default LoginPage;

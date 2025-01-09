@@ -1,9 +1,7 @@
 requirements //
 
 
-we need  login/logout system.
-
-we need to gain access to  twitter account. 
+we need  login/logout system- we need to gain access to  twitter account. 
 
 we need to show the logged in  user profile 
 
@@ -32,5 +30,18 @@ time and date
  3. dashboard 
 
  4. hosting
+
+
+
+-------frontend routes ------------
+
+/dashboard - show dashboard page 
+
+/login  - show login page 
+
+
+backend routes ---------
+
+
 
 
