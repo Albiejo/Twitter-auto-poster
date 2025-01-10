@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+//after singining in compoenents
 import CountDownDisplay from "@/components/CountDownDisplay";
 import NextTweetCard from "@/components/NextTweetCard";
 import DateCircle from "@/components/DateCircle";
 import TweetModal from "@/components/TweetModal";
 import TweetForm from "@/components/TweetForm";
+
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { SocialIcon } from "react-social-icons";
 
 interface tweet {
   id: number;
@@ -46,6 +51,55 @@ const Home = () => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [editingTweet, setEditingTweet] = useState<tweet | null>(null);
 
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-blue-400" />
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-400 to-blue-600 flex flex-col items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full text-center space-y-6">
+          <div className="flex justify-center">
+            {/* <Twitter className="h-16 w-16 text-blue-500" /> */}
+            <SocialIcon
+              url="https://twitter.com"
+              style={{ height: 60, width: 60 }}
+            />
+          </div>
+          <h1 className="text-2xl font-bold">Welcome to Auto Tweet</h1>
+          <p className="text-gray-600">
+            Schedule and automate your tweets with ease. Sign in with Twitter to
+            get started.
+          </p>
+          <Button
+            onClick={() => signIn()}
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center gap-2"
+          >
+            Sign in with Twitter
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   //for creating a new tweet
   const handleCreateTweet = (newtweet: {
     content: string;
@@ -77,6 +131,19 @@ const Home = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8 text-center">Twitter Auto Post</h1>
+
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        Welcome ! signed in as {session?.user?.name}
+      </h1>
+
+      <div className="items-center justify-center  w-full h-full  flex mt-20">
+        <Button
+          onClick={() => signOut()}
+          className="text-center justify-center"
+        >
+          Signout
+        </Button>
+      </div>
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Time until next tweet:</h2>
