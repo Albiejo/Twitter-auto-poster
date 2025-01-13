@@ -7,9 +7,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Home, LogIn, LogOut, UserPlus, Menu } from "lucide-react";
+import { signOut } from "next-auth/react";
+
 
 export function Navbar() {
-  const userLoggedin = false;
+
 
   return (
     <nav className="bg-gray-900 shadow-md">
@@ -18,15 +20,15 @@ export function Navbar() {
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               <Link href="/" className="text-xl font-bold ">
-              <span className="bg-twitter-blue">
-                Auto Tweet App
+              <span className="text-white">
+                AUTO TWEET APP
               </span>
               </Link>
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             <Link href="/login">
-              <Button className="bg-white text-gray-900 font-semibold hover:bg-gray-200">
+              <Button className="bg-white text-gray-900 font-semibold hover:bg-white" onClick={() => {signOut()}}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>

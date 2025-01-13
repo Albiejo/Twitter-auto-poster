@@ -15,7 +15,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import moment from "moment";
 
-
 interface TweetFormProps {
   isOpened: boolean;
   onClose: () => void;
@@ -33,7 +32,9 @@ const TweetForm = ({
   const [scheduleddate, setScheduleddate] = useState(
     initialTweet?.ScheduledDate || new Date()
   );
+  const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
 
+  
   useEffect(() => {
     if (initialTweet) {
       setContent(initialTweet.content);
@@ -42,7 +43,7 @@ const TweetForm = ({
       setContent("");
       setScheduleddate(new Date());
     }
-  },[initialTweet ,isOpened]);
+  }, [initialTweet, isOpened]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,8 +51,6 @@ const TweetForm = ({
     onClose();
   };
 
-
-  
   return (
     <Dialog open={isOpened} onOpenChange={onClose}>
       <DialogContent>
@@ -79,7 +78,9 @@ const TweetForm = ({
               <Label htmlFor="scheduleddate">Scheduled Date and Time</Label>
               <Input
                 id="scheduleddate"
-                onChange={(e) => setScheduleddate(moment(e.target.value).toDate())}
+                onChange={(e) =>
+                  setScheduleddate(moment(e.target.value).toDate())
+                }
                 value={scheduleddate.toISOString().slice(0, 16)}
                 type="datetime-local"
               />
@@ -87,7 +88,9 @@ const TweetForm = ({
           </div>
 
           <DialogFooter>
-            <Button type="submit">{initialTweet ? "Update" : "Schedule"} Tweet</Button>
+            <Button type="submit">
+              {initialTweet ? "Update" : "Schedule"} Tweet
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

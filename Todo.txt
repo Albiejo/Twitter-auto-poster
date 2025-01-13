@@ -9,7 +9,7 @@ we need a home page where we list the upcoming tweets and time remaining for it.
 
 we need option to create simple tweet and schedule it . 
 
-
+random color to the scheduled tweet circles 
 
 
 

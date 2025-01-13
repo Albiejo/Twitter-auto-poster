@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 
+
 //after singining in compoenents
 import CountDownDisplay from "@/components/CountDownDisplay";
 import NextTweetCard from "@/components/NextTweetCard";
@@ -13,6 +14,9 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { SocialIcon } from "react-social-icons";
+import { Navbar } from "@/components/Navbar"; 
+import axios from "axios";
+
 
 interface tweet {
   id: number;
@@ -20,49 +24,40 @@ interface tweet {
   ScheduledDate: Date;
 }
 
-const tweetArray = [
-  {
-    id: 1,
-    content: "This is the next tweet to be posted! #NextJSRocks",
-    ScheduledDate: new Date(Date.now() + 1000 * 60 * 60 * 2),
-  },
-  {
-    id: 2,
-    content: "Tweet scheduled for tomorrow. Excited about the new features! 🚀",
-    ScheduledDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
-  },
-  {
-    id: 3,
-    content:
-      "Two days from now, we'll be launching something big. Stay tuned! 👀",
-    ScheduledDate: new Date(Date.now() + 1000 * 60 * 60 * 48),
-  },
-  {
-    id: 4,
-    content:
-      "In three days, we'll be hosting a live Q&A session. Don't miss out!",
-    ScheduledDate: new Date(Date.now() + 1000 * 60 * 60 * 72),
-  },
-];
+
 
 const Home = () => {
-  const [scheduledTweets, setScheduledTweets] = useState<tweet[]>(tweetArray);
+
+  const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
+
+  const [scheduledTweets, setScheduledTweets] = useState<tweet[]>([]);
   const [selectedTweet, setSelectedTweet] = useState<tweet | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [editingTweet, setEditingTweet] = useState<tweet | null>(null);
-
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-  }, []);
+    const fetchTweets = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`${BASEURL}/tweets`);
+        if(response.status === 200){
+          const data = response.data;
+          setScheduledTweets(data);
+          setIsLoading(false);
+        }else{
+          console.error('Error fetching tweets:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching tweets:', error);
+      }
+    }
 
+    fetchTweets();
+
+  },[])
 
 
   if (isLoading) {
@@ -101,53 +96,64 @@ const Home = () => {
   }
 
   //for creating a new tweet
-  const handleCreateTweet = (newtweet: {
-    content: string;
-    ScheduledDate: Date;
-  }) => {
-    setScheduledTweets(
-      [...scheduledTweets, { id: Date.now(), ...newtweet }].sort(
-        (a, b) => a.ScheduledDate.getTime() - b.ScheduledDate.getTime()
-      )
-    );
+  const handleCreateTweet = async (newtweet: { content: string ,  ScheduledDate: Date }) => {
+   try {
+     setIsLoading(true);
+    const response = await axios.post(`${BASEURL}/tweets`, newtweet);
+    if(response.status === 201){
+      const data = response.data;
+      setScheduledTweets([...scheduledTweets, data]);
+      setIsLoading(false);
+    }else{
+      console.error('Error creating tweet:', response.statusText); 
+    }
+   } catch (error) {
+    console.error('Error creating tweet:', error);
+   }
   };
 
   //for updating a existing tweet
-  const handleUpdateTweet = (updateTweet: {
+  const handleUpdateTweet = async (updateTweet: {
     content: string;
     ScheduledDate: Date;
+    id: string;
   }) => {
-    if (editingTweet) {
-      setScheduledTweets(
-        scheduledTweets
-          .map((tweet) =>
-            tweet.id === editingTweet.id ? { ...tweet, ...updateTweet } : tweet
-          )
-          .sort((a, b) => a.ScheduledDate.getTime() - b.ScheduledDate.getTime())
-      );
+   try {
+    setIsLoading(true);
+    
+    const TweetId = updateTweet.id;
+    const newcontent = updateTweet.content;
+    const newDate = updateTweet.ScheduledDate;
+
+
+    const response = await axios.patch(`${BASEURL}/tweets}`, {tweetId: TweetId, newcontent: newcontent, newDate: newDate});
+
+    if(response.status === 200){
+      const data = response.data;
+      setScheduledTweets(scheduledTweets.map((tweet)=> tweet.id === editingTweet?.id ? {...tweet , ...data} : tweet))
+      setIsLoading(false);
+    }else{
+      console.error('Error updating tweet:', response.statusText);
     }
+   } catch (error) {
+    console.error('Error updating tweet:', error);
+   }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Twitter Auto Post</h1>
+    <>
+    {session ? <Navbar/> : null}
 
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Welcome ! signed in as {session?.user?.name}
+    <div className="container mx-auto px-4 py-8">
+    
+      <h1 className="text-xl font-bold mb-8 text-right">
+        Signed in as {session?.user?.name}
       </h1>
 
-      <div className="items-center justify-center  w-full h-full  flex mt-20">
-        <Button
-          onClick={() => signOut()}
-          className="text-center justify-center"
-        >
-          Signout
-        </Button>
-      </div>
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Time until next tweet:</h2>
-        <CountDownDisplay targetDate={scheduledTweets[0].ScheduledDate} />
+        <CountDownDisplay targetDate={scheduledTweets[0]?.ScheduledDate} />
       </div>
 
       <div className="mb-8">
@@ -198,6 +204,7 @@ const Home = () => {
         initialTweet={editingTweet || undefined}
       />
     </div>
+    </>
   );
 };
 
