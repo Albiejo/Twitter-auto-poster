@@ -142,6 +142,7 @@ const Home = () => {
 
   return (
     <>
+    {/* navbar will only be visible after signing in */}
     {session ? <Navbar/> : null}
 
     <div className="container mx-auto px-4 py-8">
