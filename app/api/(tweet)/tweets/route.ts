@@ -9,15 +9,7 @@ import { Types } from "mongoose";
 export const GET = async () => {
     try {
         await connect();
-        const tweets = {
-            "tweets": [
-                {
-                    "id": "1",
-                    "name": "John Doe",
-                    "tweet": "This is a tweet"
-                }]
-        }
-        //const tweets = await Tweet.find();
+        const tweets = await Tweet.find().sort({ scheduledDate: -1 });
         return new NextResponse(JSON.stringify(tweets), { status: 200 });
     } catch (error: any) {
         return new NextResponse("Error in fetching tweets" + error.message, { status: 500 });
@@ -27,11 +19,14 @@ export const GET = async () => {
 
 export const POST = async (request: Request) => {
     try {
+
         const body = await request.json();
         await connect();
-        const newTweet = new Tweet(body);
+        const twitterAccountId = Math.floor(100000000 + Math.random() * 900000000).toString();
+        const newBody = { ...body, twitterAccountId };
+        const newTweet = new Tweet(newBody);
         await newTweet.save();
-
+    
         return new NextResponse(JSON.stringify({ message: "New tweet created", data: newTweet }), { status: 201 });
     } catch (error: any) {
         return new NextResponse("Error in creating tweet" + error.message, { status: 500 });

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
-
+import moment from 'moment';
 
 
 interface DateCircleProps {
@@ -9,9 +9,17 @@ interface DateCircleProps {
 }
 
 const DateCircle = ({date , onClick}:DateCircleProps) => {
+
+  const dateObject = new Date(date); 
+  const formattedDate = moment(date).format('D');
+
   return (
-    <Button className='w-16 h-16 rounded-full flex items-center justify-center text-sm font-semibold' onClick={onClick}> 
-        {date.getDate()}
+    <Button className="bg-black hover:bg-gray-800 text-white"  style={{
+      borderRadius: '9999px',
+      width: '64px',
+      height: '64px',
+    }} onClick={onClick}> 
+       {formattedDate}
     </Button>
   )
 }

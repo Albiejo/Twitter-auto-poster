@@ -1,0 +1,10 @@
+1. fix date and time in scheudled tweets dialog box  // done
+
+2. when creating a new tweet it is displaying as nan first and get fixed when the page refreshes 
+
+3. when clicking on the edit button the page is crashing. 
+
+4. show timing for upcoming tweet 
+
+5. token is shown in url 
+

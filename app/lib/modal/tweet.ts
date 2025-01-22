@@ -5,7 +5,7 @@ const tweetSchema = new mongoose.Schema({
 
     content : {type: String, required: true},
     scheduledDate : {type: Date, required: true},
-    twitterAccountId: {type: String, required: true},
+    twitterAccountId:{type: Number}
 } , {timestamps: true});
 
 

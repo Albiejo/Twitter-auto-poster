@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SocialIcon } from 'react-social-icons'
-
+import moment from 'moment';
 interface NextTweetCardProps {
   tweet: string;
   scheduledtime: Date;
@@ -16,9 +16,9 @@ const NextTweetCard = ({
   scheduledtime,
   onEdit,
 }: NextTweetCardProps) => {
-  const characterCount = tweet.length;
+  const characterCount = tweet?.length;
   const maxCharacterCount = 280;
-
+  const formattedDate = moment(scheduledtime).format('D');
   return (
     <Card className="w-full max-w-md mx-auto my-4">
 
@@ -36,7 +36,7 @@ const NextTweetCard = ({
       <CardContent>
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">
-            Scheduled for: {scheduledtime.toLocaleString()}
+            Scheduled for: {formattedDate}
           </p>
           <p className="text-sm font-medium leading-none mt-2">{tweet}</p>
           <div className="flex justify-between items-center mt-4">

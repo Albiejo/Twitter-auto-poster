@@ -17,24 +17,24 @@ import { SocialIcon } from "react-social-icons";
 import { Navbar } from "@/components/Navbar"; 
 import axios from "axios";
 
+import { toast } from 'react-toastify';
+
 
 interface tweet {
-  id: number;
+  twitterAccountId : number;
   content: string;
-  ScheduledDate: Date;
+  scheduledDate: Date;
 }
-
 
 
 const Home = () => {
 
   const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
-
   const [scheduledTweets, setScheduledTweets] = useState<tweet[]>([]);
   const [selectedTweet, setSelectedTweet] = useState<tweet | null>(null);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
   const [editingTweet, setEditingTweet] = useState<tweet | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { data: session, status } = useSession();
 
@@ -45,6 +45,7 @@ const Home = () => {
         const response = await axios.get(`${BASEURL}/tweets`);
         if(response.status === 200){
           const data = response.data;
+          console.log("data is ", data);
           setScheduledTweets(data);
           setIsLoading(false);
         }else{
@@ -56,8 +57,9 @@ const Home = () => {
     }
 
     fetchTweets();
+  },[BASEURL])
 
-  },[])
+
 
 
   if (isLoading) {
@@ -95,12 +97,14 @@ const Home = () => {
     );
   }
 
-  //for creating a new tweet
-  const handleCreateTweet = async (newtweet: { content: string ,  ScheduledDate: Date }) => {
+  //function for creating a new tweet
+  const handleCreateTweet = async (newtweet: { content: string ,  scheduledDate: Date }) => {
    try {
      setIsLoading(true);
-    const response = await axios.post(`${BASEURL}/tweets`, newtweet);
+     console.log("new tweet is ", newtweet);
+     const response = await axios.post(`${BASEURL}/tweets`, newtweet);
     if(response.status === 201){
+      toast.success("New tweet post scheduled");
       const data = response.data;
       setScheduledTweets([...scheduledTweets, data]);
       setIsLoading(false);
@@ -108,11 +112,13 @@ const Home = () => {
       console.error('Error creating tweet:', response.statusText); 
     }
    } catch (error) {
+    toast.error("Error creating tweet");
     console.error('Error creating tweet:', error);
+    setIsLoading(false);
    }
   };
 
-  //for updating a existing tweet
+  //method for updating a existing tweet
   const handleUpdateTweet = async (updateTweet: {
     content: string;
     ScheduledDate: Date;
@@ -129,6 +135,7 @@ const Home = () => {
     const response = await axios.patch(`${BASEURL}/tweets}`, {tweetId: TweetId, newcontent: newcontent, newDate: newDate});
 
     if(response.status === 200){
+      toast.success("tweet post updated");
       const data = response.data;
       setScheduledTweets(scheduledTweets.map((tweet)=> tweet.id === editingTweet?.id ? {...tweet , ...data} : tweet))
       setIsLoading(false);
@@ -136,9 +143,13 @@ const Home = () => {
       console.error('Error updating tweet:', response.statusText);
     }
    } catch (error) {
+    toast.error("Error updating tweet");
     console.error('Error updating tweet:', error);
+    setIsLoading(false);
    }
   };
+
+
 
   return (
     <>
@@ -151,16 +162,18 @@ const Home = () => {
         Signed in as {session?.user?.name}
       </h1>
 
+     
+
 
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Time until next tweet:</h2>
-        <CountDownDisplay targetDate={scheduledTweets[0]?.ScheduledDate} />
+        <CountDownDisplay targetDate={scheduledTweets[0]?.scheduledDate} />
       </div>
 
       <div className="mb-8">
         <NextTweetCard
-          tweet={scheduledTweets[0].content}
-          scheduledtime={scheduledTweets[0].ScheduledDate}
+          tweet={scheduledTweets[0]?.content}
+          scheduledtime={scheduledTweets[0]?.scheduledDate}
           onEdit={() => {
             setEditingTweet(scheduledTweets[0]);
             setIsFormOpen(true);
@@ -171,18 +184,23 @@ const Home = () => {
       <div className="mb-8">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Upcoming tweets:</h2>
+
           <Button onClick={() => setIsFormOpen(true)}>
             <PlusCircle className="mr-2 h-4 w-4" /> New Tweet
           </Button>
+
         </div>
-        <div className="flex flex-wrap gap-4">
-          {scheduledTweets.map((tweet) => (
+        <div className="flex flex-wrap gap-8">
+          {scheduledTweets && scheduledTweets.map((tweet , index) => (
             <DateCircle
-              key={tweet.id}
-              date={tweet.ScheduledDate}
+              key={index}
+              date={tweet.scheduledDate}
               onClick={() => setSelectedTweet(tweet)}
             />
           ))}
+          {
+            !scheduledTweets.length && <p className="text-red-600 font-bold">No tweets scheduled</p>
+          }
         </div>
       </div>
 
@@ -190,7 +208,7 @@ const Home = () => {
         <TweetModal
           isOpen={!!selectedTweet}
           onClose={() => setSelectedTweet(null)}
-          date={selectedTweet.ScheduledDate}
+          date={selectedTweet.scheduledDate}
           content={selectedTweet.content}
         />
       )}
@@ -205,6 +223,8 @@ const Home = () => {
         initialTweet={editingTweet || undefined}
       />
     </div>
+
+
     </>
   );
 };

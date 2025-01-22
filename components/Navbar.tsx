@@ -28,7 +28,7 @@ export function Navbar() {
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             <Link href="/login">
-              <Button className="bg-white text-gray-900 font-semibold hover:bg-white" onClick={() => {signOut()}}>
+              <Button className="text-gray-900 font-semibold " variant={"outline"} onClick={() => {signOut()}}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>
